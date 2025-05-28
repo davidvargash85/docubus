@@ -1,33 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import { promises as fs } from "fs";
-
-const filePath = path.join(process.cwd(), "content", "manual.md");
+import { NextResponse } from 'next/server';
+import Doc from '@/app/models/Doc';
+import connectDB from '@/app/lib/mongoose';
 
 export async function GET() {
-  try {
-    const content = await fs.readFile(filePath, "utf-8");
-    return NextResponse.json({ content });
-  } catch (err) {
-    console.log('>> err', err);
-    return NextResponse.json({ error: "Manual not found" }, { status: 404 });
-  }
+  await connectDB();
+  const doc = await Doc.findOne(); // get the first doc
+  return NextResponse.json({ content: doc?.content || '' });
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { content } = await req.json();
+export async function POST(request: Request) {
+  await connectDB();
+  const { content } = await request.json();
 
-    if (!content) {
-      return NextResponse.json({ error: "Content is required" }, { status: 400 });
-    }
-
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, content, "utf-8");
-
-    return NextResponse.json({ message: "Manual saved successfully" });
-  } catch (err) {
-    console.log('>> err', err);
-    return NextResponse.json({ error: "Failed to save manual" }, { status: 500 });
+  let doc = await Doc.findOne();
+  if (!doc) {
+    doc = new Doc({ content });
+  } else {
+    doc.content = content;
   }
+  await doc.save();
+
+  return NextResponse.json({ success: true });
 }
