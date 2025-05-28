@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.react-mde .mde-header .mde-tabs button {
+  background-color: #1f2937; /* Tailwind gray-800 */
+  color: #d1d5db; /* Tailwind gray-300 */
+  padding: 0 1rem;
+  border-radius: 0.25rem;
+}
+
+.react-mde .mde-header .mde-tabs button.selected {
+  background-color: #111827; /* Tailwind gray-900 */
+  color: #ffffff; /* white */
+}
+
+.react-mde.preview-only .mde-header {
+  display: none;
+}
