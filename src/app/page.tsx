@@ -55,6 +55,7 @@ export default function MarkdownEditor() {
           setError(data.error || "Failed to load content");
         }
       } catch (err) {
+        console.log(">> err", err);
         setError("Error fetching content");
       } finally {
         setIsLoading(false);

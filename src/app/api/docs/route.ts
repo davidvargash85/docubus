@@ -9,6 +9,7 @@ export async function GET() {
     const content = await fs.readFile(filePath, "utf-8");
     return NextResponse.json({ content });
   } catch (err) {
+    console.log('>> err', err);
     return NextResponse.json({ error: "Manual not found" }, { status: 404 });
   }
 }
@@ -26,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Manual saved successfully" });
   } catch (err) {
+    console.log('>> err', err);
     return NextResponse.json({ error: "Failed to save manual" }, { status: 500 });
   }
 }

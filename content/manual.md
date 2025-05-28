@@ -1,7 +1,7 @@
 # 📘 Super Awesome
 
-This is a **bold** statement, and this is *italic*.  
-You can also do ***bold italic***.
+1. This is a **bold** statement, and this is *italic*.  
+2. You can also do ***bold italic***.
 
 This is an **image**  
 ![](https://yourcoa.com/help/lib/NewItem160.png)
