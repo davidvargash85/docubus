@@ -1,48 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReactMde from "react-mde";
-import * as Showdown from "showdown";
-import "react-mde/lib/styles/css/react-mde-all.css";
+import dynamic from "next/dynamic";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
-interface ReactMdeViewerProps {
-  markdown: string;
-}
-
-function ReactMdeViewer({ markdown }: ReactMdeViewerProps) {
-  const converter = new Showdown.Converter({
-    tables: true,
-    simplifiedAutoLink: true,
-    strikethrough: true,
-    tasklists: true,
-  });
-
-  return (
-    <div className="react-mde preview-only">
-      <ReactMde
-        value={markdown}
-        onChange={() => {}}
-        selectedTab="preview"
-        onTabChange={() => {}}
-        generateMarkdownPreview={(md) =>
-          Promise.resolve(converter.makeHtml(md))
-        }
-        childProps={{
-          textArea: { style: { display: "none" }, readOnly: true },
-        }}
-      />
-    </div>
-  );
-}
+// Dynamically import MDEditor to avoid SSR issues
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+const MarkdownPreview = dynamic(
+  () => import("@uiw/react-markdown-preview"),
+  { ssr: false }
+);
 
 export default function MarkdownEditor() {
   const [value, setValue] = useState("");
-  const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
-
-  const converter = new Showdown.Converter({ tables: true });
 
   useEffect(() => {
     const loadContent = async () => {
@@ -55,7 +29,7 @@ export default function MarkdownEditor() {
           setError(data.error || "Failed to load content");
         }
       } catch (err) {
-        console.log(">> err", err);
+        console.error(">> err", err);
         setError("Error fetching content");
       } finally {
         setIsLoading(false);
@@ -94,18 +68,11 @@ export default function MarkdownEditor() {
         <p className="text-gray-500">Loading...</p>
       ) : (
         <>
-          <ReactMde
+          <MDEditor
             value={value}
-            onChange={setValue}
-            selectedTab={selectedTab}
-            onTabChange={setSelectedTab}
-            generateMarkdownPreview={(md) =>
-              Promise.resolve(converter.makeHtml(md))
-            }
-            childProps={{
-              writeButton: { style: { display: "none" } },
-              previewButton: { style: { display: "none" } },
-            }}
+            onChange={(val) => setValue(val || "")}
+            height={400}
+            preview="edit"
           />
 
           <div className="flex items-center gap-4 mt-4">
@@ -120,7 +87,9 @@ export default function MarkdownEditor() {
           </div>
 
           <h2 className="text-xl font-bold my-6">Live Preview</h2>
-          <ReactMdeViewer key={value} markdown={value} />
+          <div data-color-mode="light">
+            <MarkdownPreview source={value} />
+          </div>
         </>
       )}
     </div>

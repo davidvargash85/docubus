@@ -9,14 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@uiw/react-markdown-preview": "^5.1.4",
+    "@uiw/react-md-editor": "^4.0.7",
     "classnames": "^2.5.1",
     "next": "15.3.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-markdown": "^10.1.0",
-    "react-mde": "^11.5.0",
-    "remark-gfm": "^4.0.1",
-    "showdown": "^2.1.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
